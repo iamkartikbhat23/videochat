@@ -4,19 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn-tailwindcss.vercel.app?plugins=forms"></script>
 </head>
 
 <body>
-    <div
-        class="flex flex-col md:relative md:container mx-auto border-2 border-gray-400 max-h-[90%] md:max-h-[99%] md:block">
-        <video class="bg-black w-full md:max-w-screen md:max-h-screen" id="user2" autoplay playsinline></video>
-        <video
-            class="flex rounded-sm md:fixed md:right-1 md:bottom-1 border-4 border-green-500 max-h-[50%] md:max-w-[25%] md:max-h-[30%] bg-gray-200 bg-black w-full"
-            id="user1" autoplay playsinline></video>
+   <div class="container flex items-center justify-center border-4 border-green-500 rounded-md min-h-screen">
+    <div class="space-y-10 flex flex-col items-center justify-center">
+        <div class="text-purple-700 text-3xl font-semibold text-center">K - ChatApp</div>
+        <div class="flex flex-col">
+            <input minlength="10" type="text" name="roomName" id="roomName" class="rounded-full border-2 border-purple-600  focus:border-purple-500 focus:ring-purple-500" placeholder="Enter room Name" />
+            <div class="text-xs text-red-500" id="inviteCodeError">
+
+            </div>
+            <div class="w-full italic text-xs text-center">change invite id if you wish</div>
+        </div>
+        <button class="bg-purple-600 rounded-full px-24 py-3 text-white" onclick="startChat()">Start</button>
     </div>
-    <script src="agora-rtm-sdk-1.5.1.js"></script>
-    <script src="main.js"></script>
+   </div>
+    <script>
+        window.onload = () => {
+            document.getElementById('roomName').value=makeid(15)
+        }
+        function makeid(length) {
+            var result           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result.toUpperCase();
+        }
+
+        function startChat() {
+            let inviteCode = document.getElementById('roomName').value;
+            if(inviteCode=="") {
+                document.getElementById('inviteCodeError').innerHTML = 'Invite Code cannot be empty'
+                return false
+            }
+            if(inviteCode.length<10){
+                document.getElementById('inviteCodeError').innerHTML = 'Invite Code should be at least 10 characters'
+                return false
+            }
+
+            document.getElementById('inviteCodeError').style.display = 'none'
+            window.location = `chat.html?room=${inviteCode}`
+        }
+    </script>
 </body>
 
 </html>

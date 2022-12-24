@@ -6,6 +6,24 @@ let uid = String(Math.floor(Math.random() * 10000))
 let client;
 let channel;
 
+
+let queryString = window.location.search
+let urlParams = new URLSearchParams(queryString)
+let roomId = urlParams.get('room')
+let copynclose ;
+
+if(!roomId) {
+    window.location = 'index.html';
+} else {
+    document.getElementById('roomLink').innerHTML = window.location
+    copynclose =  async () => {
+        // alert(window.location)
+        await navigator.clipboard.writeText(window.location)
+        document.getElementById('popup').style.display='none';
+    }
+}
+
+
 let localStream ;
 let remoteStream ;
 let peerConnection;
@@ -17,19 +35,30 @@ const servers =  {
         }
     ]
 }
+let constraints = {
+    video:{
+        width:{
+            min:640,ideal:1920,max:1920
+        },
+        height: {
+            min:480,ideal:1080,max:1080
+        }    
+    }, 
+    audio:true
+}
 let init = async () => {
 
     client = await AgoraRTM.createInstance('88c338ac10cb4b55bd5392ca78aecb65');
     await client.login({uid,token})
  
-    channel = client.createChannel('main2');
+    channel = client.createChannel(roomId);
     await channel.join();
 
     channel.on('MemberJoined',handleUserJoined)
 
     client.on("MessageFromPeer", handleMessageFromPeer)
 
-    localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true})
+    localStream = await navigator.mediaDevices.getUserMedia(constraints)
     document.getElementById('user1').srcObject = localStream
 
 }
@@ -64,7 +93,7 @@ let createPeerConnection = async(MemberId) => {
     document.getElementById('user2').srcObject = remoteStream
 
     if(!localStream) {
-        localStream = await navigator.mediaDevices.getUserMedia({video:true, audio:true})
+        localStream = await navigator.mediaDevices.getUserMedia(constraints)
         document.getElementById('user1').srcObject = localStream
     }
 
@@ -111,5 +140,12 @@ let addAnswer = async (answer) => {
         peerConnection.setRemoteDescription(answer)
     }
 }
+
+let leaveChannel = async () => {
+    await channel.leave();
+    await client.logout();
+}
+
+window.addEventListener('beforeunload', leaveChannel)
 
 init()

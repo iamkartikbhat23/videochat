@@ -12,16 +12,16 @@ let urlParams = new URLSearchParams(queryString)
 let roomId = urlParams.get('room')
 let copynclose ;
 
-// if(!roomId) {
-//     window.location = 'index.html';
-// } else {
-//     document.getElementById('roomLink').innerHTML = window.location
-//     copynclose =  async () => {
-//         // alert(window.location)
-//         await navigator.clipboard.writeText(window.location)
-//         document.getElementById('popup').style.display='none';
-//     }
-// }
+if(!roomId) {
+    window.location = 'index.html';
+} else {
+    document.getElementById('roomLink').innerHTML = window.location
+    copynclose =  async () => {
+        // alert(window.location)
+        await navigator.clipboard.writeText(window.location)
+        document.getElementById('popup').style.display='none';
+    }
+}
 
 
 let localStream ;

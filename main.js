@@ -1,4 +1,4 @@
-let APP_ID = "88c338ac10cb4b55bd5392ca78aecb65";
+
 
 let token = null
 let uid = String(Math.floor(Math.random() * 10000))
@@ -28,6 +28,8 @@ let localStream ;
 let remoteStream ;
 let peerConnection;
 
+let tokenHash = "88c338ac10cb4b55bd5392ca78aecb65";
+
 const servers =  {
     iseServers : [
         {
@@ -48,7 +50,7 @@ let constraints = {
 }
 let init = async () => {
 
-    client = await AgoraRTM.createInstance('88c338ac10cb4b55bd5392ca78aecb65');
+    client = await AgoraRTM.createInstance(tokenHash);
     await client.login({uid,token})
  
     channel = client.createChannel(roomId);
